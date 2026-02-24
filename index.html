@@ -1,0 +1,1212 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MY_NAME - Android Developer</title>
+    <style>
+        /* ===== BASIC RESET ===== */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        /* ===== BODY STYLES ===== */
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: #0a0a0a;
+            color: #e0e0e0;
+            overflow-x: hidden;
+            cursor: none;
+        }
+
+        /* ===== NAV BAR STYLES ===== */
+        nav {
+            position: sticky;
+            top: 0;
+            z-index: 10;
+            background: rgba(10, 10, 10, 0.8);
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid rgba(102, 126, 234, 0.3);
+            padding: 15px 0;
+        }
+
+        .nav-list {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+            display: flex;
+            justify-content: center;
+            list-style: none;
+        }
+
+        .nav-list a {
+            color: #e0e0e0;
+            text-decoration: none;
+            padding: 10px 20px;
+            margin: 0 10px;
+            border-radius: 5px;
+            transition: all 0.3s ease;
+            font-weight: 500;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        /* Underline effect on hover */
+        .nav-list a::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 3px;
+            background: linear-gradient(90deg, #667eea, #764ba2);
+            transform: scaleX(0);
+            transform-origin: bottom right;
+            transition: transform 0.3s ease-out;
+        }
+
+        .nav-list a:hover::after {
+            transform: scaleX(1);
+            transform-origin: bottom left;
+        }
+        
+        .nav-list a:hover {
+            color: #fff;
+        }
+
+
+        /* ===== CUSTOM CURSOR (Speed changed in JS) ===== */
+        #custom-cursor {
+            position: fixed;
+            width: 20px;
+            height: 20px;
+            border: 2px solid #667eea;
+            border-radius: 50%;
+            pointer-events: none;
+            z-index: 10000;
+            transition: transform 0.1s ease;
+            box-shadow: 0 0 20px rgba(102, 126, 234, 0.6);
+        }
+
+        /* Makes cursor bigger when hovering clickable things */
+        #custom-cursor.hovering {
+            transform: scale(1.5);
+            background: rgba(102, 126, 234, 0.2);
+        }
+
+        /* ===== CURSOR TRAIL EFFECT ===== */
+        .cursor-trail {
+            position: fixed;
+            width: 4px;
+            height: 4px;
+            background: #667eea;
+            border-radius: 50%;
+            pointer-events: none;
+            z-index: 9999;
+            opacity: 0.6;
+            box-shadow: 0 0 10px rgba(102, 126, 234, 0.8);
+            transition: opacity 0.5s ease, transform 0.5s ease;
+            transform: scale(1);
+        }
+        
+        .cursor-trail.fading {
+            opacity: 0;
+            transform: scale(0);
+        }
+
+        /* ===== SCROLL PROGRESS BAR ===== */
+        #scroll-progress {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 0%;
+            height: 4px;
+            background: linear-gradient(90deg, #667eea, #764ba2);
+            z-index: 9999;
+            box-shadow: 0 0 20px rgba(102, 126, 234, 0.8);
+        }
+
+        /* ===== FLOATING PARTICLES BACKGROUND ===== */
+        #particles-canvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 0;
+            pointer-events: none;
+        }
+
+        /* ===== COPY NOTIFICATION ===== */
+        #copy-notification {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            padding: 15px 25px;
+            border-radius: 10px;
+            font-weight: bold;
+            opacity: 0;
+            transform: translateY(-20px);
+            transition: all 0.3s ease;
+            z-index: 10000;
+            box-shadow: 0 10px 30px rgba(102, 126, 234, 0.5);
+        }
+
+        #copy-notification.show {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* ===== MAIN CONTAINER ===== */
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            position: relative;
+            z-index: 1;
+        }
+
+        /* ===== HERO SECTION (TOP PART) ===== */
+        header {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            padding: 40px 20px;
+        }
+
+        .hero-content {
+            text-align: center;
+            max-width: 800px;
+        }
+
+        /* ===== PROFILE PHOTO (MODIFIED) ===== */
+        .profile-photo {
+            width: 180px;
+            height: 180px;
+            border-radius: 50%;
+            margin: 0 auto 30px;
+            position: relative;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            padding: 5px;
+            animation: pulse-glow 3s infinite ease-in-out;
+        }
+
+        /* Pulsing Glow Animation */
+        @keyframes pulse-glow {
+            0% {
+                box-shadow: 0 0 5px rgba(102, 126, 234, 0.3), 0 0 10px rgba(102, 126, 234, 0.1);
+            }
+            50% {
+                box-shadow: 0 0 25px rgba(102, 126, 234, 0.8), 0 0 50px rgba(118, 75, 162, 0.5);
+            }
+            100% {
+                box-shadow: 0 0 5px rgba(102, 126, 234, 0.3), 0 0 10px rgba(102, 126, 234, 0.1);
+            }
+        }
+
+        .profile-photo-inner {
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+            background: #1a1a1a;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 4em;
+            color: #fff;
+            overflow: hidden;
+        }
+
+        /* ===== NAME WITH TYPEWRITER EFFECT ===== */
+        .main-name {
+            font-size: 4em;
+            font-weight: bold;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 20px;
+            min-height: 80px;
+        }
+
+        /* Blinking cursor effect for typewriter */
+        .typing-cursor {
+            display: inline-block;
+            width: 3px;
+            height: 1em;
+            background: #667eea;
+            margin-left: 5px;
+            animation: blink 1s infinite;
+        }
+
+        @keyframes blink {
+            0%, 50% { opacity: 1; }
+            51%, 100% { opacity: 0; }
+        }
+
+        /* ===== ANIMATED ROLE TEXT ===== */
+        .role-text {
+            font-size: 1.8em;
+            color: #667eea;
+            margin-bottom: 20px;
+            min-height: 60px;
+            font-weight: 600;
+            transition: opacity 0.5s ease;
+        }
+
+        /* ===== ABOUT ME DESCRIPTION ===== */
+        .about-description {
+            font-size: 1.1em;
+            color: #b0b0b0;
+            line-height: 1.8;
+            margin: 30px auto;
+            max-width: 700px;
+            padding: 25px;
+            background: rgba(255, 255, 255, 0.03);
+            border-radius: 15px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        /* ===== ANIMATED STATS COUNTER ===== */
+        .stats-container {
+            display: flex;
+            justify-content: center;
+            gap: 50px;
+            margin: 40px 0;
+            flex-wrap: wrap;
+        }
+
+        .stat-item {
+            text-align: center;
+        }
+
+        .stat-number {
+            font-size: 3em;
+            font-weight: bold;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .stat-label {
+            color: #808080;
+            margin-top: 5px;
+        }
+
+        /* ===== CONTACT ICONS ===== */
+        .contact-info {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            flex-wrap: wrap;
+            margin-top: 40px;
+        }
+
+        .contact-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 15px 25px;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 25px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            transition: all 0.3s ease;
+            cursor: pointer;
+            position: relative;
+            text-decoration: none;
+            color: inherit;
+        }
+
+        .contact-item:hover {
+            background: rgba(255, 255, 255, 0.1);
+            box-shadow: 0 15px 40px rgba(102, 126, 234, 0.4);
+        }
+
+        .contact-icon {
+            font-size: 1.5em;
+        }
+
+        /* ===== SECTIONS (Experience, Skills, Projects) ===== */
+        .section {
+            margin: 80px 0;
+            padding: 50px;
+            background: rgba(20, 20, 20, 0.6);
+            border-radius: 20px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            position: relative;
+            overflow: hidden;
+            transition: all 0.4s ease, opacity 0.8s ease, transform 0.8s ease;
+            transform-style: flat;
+        }
+
+        /* 2D LIFT EFFECT - SIMPLIFIED HOVER */
+        .section:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 20px 60px rgba(102, 126, 234, 0.3);
+        }
+
+        /* Glowing effect on section hover */
+        .section::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(102, 126, 234, 0.15) 0%, transparent 70%);
+            opacity: 0;
+            transition: opacity 0.5s ease;
+            pointer-events: none;
+        }
+
+        .section:hover::before {
+            opacity: 1;
+        }
+
+        .section-title {
+            font-size: 2.5em;
+            margin-bottom: 40px;
+            color: #fff;
+            position: relative;
+            padding-bottom: 15px;
+        }
+
+        .section-title::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 80px;
+            height: 4px;
+            background: linear-gradient(90deg, #667eea, #764ba2);
+            border-radius: 2px;
+        }
+
+        /* ===== TIMELINE ITEM CARD ENHANCEMENT ===== */
+        .timeline-item {
+            position: relative;
+            margin-bottom: 50px;
+            padding: 25px;
+            background: rgba(255, 255, 255, 0.03);
+            border-radius: 15px;
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            transition: all 0.4s ease;
+            cursor: pointer;
+            box-shadow: inset 0 0 0 transparent;
+        }
+
+        /* ADDED SUBTLE INNER GLOW EFFECT ON HOVER */
+        .timeline-item:hover {
+            transform: translateX(15px);
+            background: rgba(255, 255, 255, 0.08);
+            box-shadow: 0 10px 40px rgba(102, 126, 234, 0.4), 
+                        inset 0 0 20px rgba(102, 126, 234, 0.2);
+        }
+
+        /* Vertical line connecting timeline dots */
+        .timeline::before {
+            content: '';
+            position: absolute;
+            left: 20px;
+            top: 0;
+            bottom: 0;
+            width: 3px;
+            background: linear-gradient(180deg, #667eea, #764ba2);
+        }
+
+        .timeline-dot {
+            position: absolute;
+            left: -34px;
+            top: 30px;
+            width: 14px;
+            height: 14px;
+            background: #667eea;
+            border-radius: 50%;
+            border: 4px solid #0a0a0a;
+            box-shadow: 0 0 20px rgba(102, 126, 234, 0.8);
+            animation: pulse-dot 2s infinite;
+        }
+
+        @keyframes pulse-dot {
+            0%, 100% { transform: scale(1); box-shadow: 0 0 20px rgba(102, 126, 234, 0.8); }
+            50% { transform: scale(1.3); box-shadow: 0 0 30px rgba(102, 126, 234, 1); }
+        }
+
+        .timeline-date {
+            color: #667eea;
+            font-weight: bold;
+            margin-bottom: 10px;
+            font-size: 1em;
+        }
+
+        .timeline-title {
+            font-size: 1.4em;
+            color: #fff;
+            margin-bottom: 15px;
+        }
+
+        .timeline-desc {
+            color: #b0b0b0;
+            line-height: 1.9;
+        }
+
+        /* ===== TECH SKILLS GRID (IMPROVED) ===== */
+        .tech-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 25px;
+            margin-top: 40px;
+        }
+
+        .tech-category {
+            padding: 30px;
+            background: rgba(255, 255, 255, 0.03);
+            border-radius: 15px;
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            transition: all 0.4s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        /* Top colored line that appears on hover */
+        .tech-category::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, #667eea, #764ba2);
+            transform: scaleX(0);
+            transition: transform 0.4s ease;
+        }
+
+        .tech-category:hover::before {
+            transform: scaleX(1);
+        }
+
+        .tech-category:hover {
+            transform: translateY(-10px);
+            background: rgba(255, 255, 255, 0.08);
+            box-shadow: 0 20px 50px rgba(102, 126, 234, 0.4);
+        }
+
+        /* Category Title with Icon Spacing */
+        .tech-category-title {
+            font-size: 1.3em;
+            color: #667eea;
+            margin-bottom: 20px;
+            font-weight: bold;
+            display: flex; /* Aligns icon and text */
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .tech-category-title i {
+            font-size: 1.2em;
+        }
+
+        .tech-items {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px;
+            /* Added padding to prevent cluttering the title */
+            padding-top: 10px; 
+        }
+
+        /* Individual Tech Item Tag */
+        .tech-item {
+            padding: 10px 20px;
+            background: rgba(102, 126, 234, 0.2);
+            border-radius: 20px;
+            font-size: 0.95em;
+            transition: all 0.3s ease;
+            border: 1px solid rgba(102, 126, 234, 0.3);
+            cursor: default;
+            font-weight: 600; /* Made text bolder */
+        }
+
+        /* Tech item hover effect */
+        .tech-item:hover {
+            background: rgba(102, 126, 234, 0.4);
+            transform: scale(1.05);
+            box-shadow: 0 5px 20px rgba(102, 126, 234, 0.5);
+        }
+
+        /* ===== PROJECT CARDS ENHANCEMENT ===== */
+        .projects-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 35px;
+            margin-top: 40px;
+        }
+
+        .project-card {
+            padding: 35px;
+            background: rgba(255, 255, 255, 0.03);
+            border-radius: 15px;
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            transition: all 0.5s ease;
+            position: relative;
+            overflow: hidden;
+            transform-style: flat;
+            box-shadow: inset 0 0 0 transparent;
+        }
+
+        /* Gradient that slides down on hover */
+        .project-card::before {
+            content: '';
+            position: absolute;
+            top: -100%;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(180deg, rgba(102, 126, 234, 0.3), transparent);
+            transition: top 0.5s ease;
+        }
+
+        .project-card:hover::before {
+            top: 0;
+        }
+
+        /* SIMPLIFIED 2D LIFT EFFECT + INNER GLOW ON HOVER */
+        .project-card:hover {
+            transform: translateY(-10px);
+            background: rgba(255, 255, 255, 0.08);
+            box-shadow: 0 25px 60px rgba(102, 126, 234, 0.5),
+                        inset 0 0 25px rgba(102, 126, 234, 0.3);
+            border-color: rgba(102, 126, 234, 0.5);
+        }
+
+        .project-title {
+            font-size: 1.6em;
+            color: #fff;
+            margin-bottom: 15px;
+            position: relative;
+            z-index: 1;
+        }
+
+        .project-desc {
+            color: #b0b0b0;
+            line-height: 1.9;
+            position: relative;
+            z-index: 1;
+        }
+
+        /* ===== HIGHLIGHTS SECTION ===== */
+        .highlights {
+            margin-top: 35px;
+            padding: 30px;
+            background: rgba(102, 126, 234, 0.1);
+            border-left: 5px solid #667eea;
+            border-radius: 10px;
+        }
+
+        .highlights h3 {
+            color: #667eea;
+            margin-bottom: 20px;
+            font-size: 1.3em;
+        }
+
+        .highlights ul {
+            list-style: none;
+            padding-left: 0;
+        }
+
+        .highlights li {
+            padding: 12px 0;
+            color: #c0c0c0;
+            position: relative;
+            padding-left: 30px;
+        }
+
+        .highlights li::before {
+            content: '▹';
+            position: absolute;
+            left: 0;
+            color: #667eea;
+            font-size: 1.3em;
+        }
+
+        /* ===== FOOTER ===== */
+        footer {
+            text-align: center;
+            padding: 50px 20px;
+            color: #808080;
+            margin-top: 80px;
+        }
+
+        /* ===== MOBILE RESPONSIVE ===== */
+        @media (max-width: 768px) {
+            .main-name {
+                font-size: 2.5em;
+            }
+            
+            .role-text {
+                font-size: 1.3em;
+            }
+            
+            .section {
+                padding: 30px;
+            }
+            
+            .timeline {
+                padding-left: 40px;
+            }
+
+            .stats-container {
+                gap: 30px;
+            }
+
+            .stat-number {
+                font-size: 2em;
+            }
+
+            .nav-list {
+                flex-wrap: wrap;
+            }
+
+            .nav-list a {
+                padding: 8px 10px;
+                margin: 5px;
+                font-size: 0.9em;
+            }
+        }
+    </style>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+</head>
+<body>
+    <!-- CUSTOM CURSOR: Follows your mouse pointer -->
+    <div id="custom-cursor"></div>
+
+    <!-- SCROLL PROGRESS BAR: Shows at top of page -->
+    <div id="scroll-progress"></div>
+
+    <!-- COPY NOTIFICATION: Appears when you copy text -->
+    <div id="copy-notification">Copied to clipboard! ✓</div>
+
+    <!-- CANVAS FOR PARTICLES: Animated background -->
+    <canvas id="particles-canvas"></canvas>
+
+    <!-- ===== NAVIGATION BAR ===== -->
+    <nav>
+        <ul class="nav-list">
+            <li><a href="#home" class="magnetic-btn">Home</a></li>
+            <li><a href="#timeline" class="magnetic-btn">Experience</a></li>
+            <li><a href="#apps" class="magnetic-btn">Projects</a></li>
+            <li><a href="#skills" class="magnetic-btn">Skills</a></li>
+            <li><a href="#apart" class="magnetic-btn">Highlights</a></li>
+        </ul>
+    </nav>
+
+    <div class="container">
+        <!-- ===== HERO SECTION (TOP OF PAGE) - #home ===== -->
+        <header id="home">
+            <div class="hero-content">
+                <!-- Profile Photo with Pulsing Glow -->
+                <div class="profile-photo">
+                    <div class="profile-photo-inner">
+                        <img src="E:\portfolio website\YashImage.jpg" alt="Yash Bhadange Profile Photo" style="width: 100%; height: 100%; object-fit: cover; border-radius: 50%;">
+                    </div>
+                </div>
+
+                <h1 class="main-name">
+                    <span id="typed-name"></span><span class="typing-cursor"></span>
+                </h1>
+
+                <div class="role-text" id="role-text">Android Developer Intern</div>
+
+                <div class="about-description">
+                    Passionate Android Developer Intern at a leading cybersecurity company, specializing in building secure mobile applications with **Kotlin** and **Jetpack Compose**. I combine technical expertise with creative problem-solving to develop innovative solutions that prioritize both user experience and security. Always eager to learn new technologies and contribute to meaningful projects.
+                </div>
+
+                <div class="stats-container">
+                    <div class="stat-item">
+                        <div class="stat-number" data-target="2">0</div>
+                        <div class="stat-label">Apps Built</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-number" data-target="6">0</div>
+                        <div class="stat-label">Months Experience</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-number" data-target="10">0</div>
+                        <div class="stat-label">Technologies</div>
+                    </div>
+                </div>
+
+                <div class="contact-info">
+                    <div class="contact-item magnetic-btn" data-copy="your.email@example.com">
+                        <span class="contact-icon">📧</span>
+                        <span>your.email@example.com</span>
+                    </div>
+                    <div class="contact-item magnetic-btn" data-copy="+91 XXXXX XXXXX">
+                        <span class="contact-icon">📱</span>
+                        <span>+91 XXXXX XXXXX</span>
+                    </div>
+                    <a href="https://linkedin.com/in/MY_NAME" target="_blank" class="contact-item magnetic-btn">
+                        <span class="contact-icon"><i class="fab fa-linkedin"></i></span>
+                        <span>LinkedIn</span>
+                    </a>
+                    <a href="https://github.com/MY_NAME" target="_blank" class="contact-item magnetic-btn">
+                        <span class="contact-icon"><i class="fab fa-github"></i></span>
+                        <span>GitHub</span>
+                    </a>
+                </div>
+            </div>
+        </header>
+
+        <!-- ===== INTERNSHIP TIMELINE SECTION - #timeline ===== -->
+        <section class="section" id="timeline">
+            <h2 class="section-title">Internship Journey</h2>
+            <div class="timeline">
+                <div class="timeline-item">
+                    <div class="timeline-dot"></div>
+                    <div class="timeline-date">Month 6 • Present</div>
+                    <h3 class="timeline-title">Advanced Development & Integration</h3>
+                    <p class="timeline-desc">Focusing on complex app architectures, implementing advanced security features, and integrating multiple APIs. Working with Jetpack Compose for modern UI development and optimizing app performance for better user experience.</p>
+                </div>
+                <div class="timeline-item">
+                    <div class="timeline-dot"></div>
+                    <div class="timeline-date">Month 4-5</div>
+                    <h3 class="timeline-title">Feature Development & Testing</h3>
+                    <p class="timeline-desc">Building robust features with Kotlin, implementing **MVVM architecture**, and conducting comprehensive testing. Collaborating with the security team to ensure app-level security protocols and best practices are followed throughout development.</p>
+                </div>
+                <div class="timeline-item">
+                    <div class="timeline-dot"></div>
+                    <div class="timeline-date">Month 2-3</div>
+                    <h3 class="timeline-title">Core Development & UI/UX</h3>
+                    <p class="timeline-desc">Developed user interfaces with Material Design principles, integrated Firebase services for backend functionality, and implemented real-time data synchronization features. Enhanced app responsiveness and user engagement.</p>
+                </div>
+                <div class="timeline-item">
+                    <div class="timeline-dot"></div>
+                    <div class="timeline-date">Month 1</div>
+                    <h3 class="timeline-title">Onboarding & Foundation</h3>
+                    <p class="timeline-desc">Started as Android Developer Intern at a leading cybersecurity company. Learned company codebase, development workflows, and security-first development practices. Set up development environment with **Android Studio** and version control systems.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- ===== APPS DEVELOPED SECTION - #apps ===== -->
+        <section class="section" id="apps">
+            <h2 class="section-title">Apps Developed</h2>
+            <div class="projects-grid">
+                <div class="project-card">
+                    <h3 class="project-title">SecureVault Mobile</h3>
+                    <p class="project-desc">A secure password management application with biometric authentication and encrypted storage. Built with Kotlin and Jetpack Compose, featuring local encryption, secure key storage using Android Keystore, and Material You design. Implements MVVM architecture with Room database for local storage and offline functionality.</p>
+                </div>
+                <div class="project-card">
+                    <h3 class="project-title">CyberGuard Alert</h3>
+                    <p class="project-desc">Real-time security monitoring app that alerts users about potential threats and vulnerabilities. Integrated with Firebase Cloud Messaging for instant notifications, uses WorkManager for background monitoring, and displays security analytics with beautiful charts. Features dark theme with smooth animations and intuitive user interface.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- ===== TECHNICAL SKILLS SECTION - #skills (IMPROVED) ===== -->
+        <section class="section" id="skills">
+            <h2 class="section-title">Technical Skills</h2>
+            <div class="tech-grid">
+                <div class="tech-category">
+                    <h3 class="tech-category-title">
+                        <i class="fas fa-code"></i> Languages
+                    </h3>
+                    <div class="tech-items">
+                        <span class="tech-item">Kotlin</span>
+                        <span class="tech-item">Java</span>
+                        <span class="tech-item">Python</span>
+                        <span class="tech-item">JavaScript</span>
+                        <span class="tech-item">C</span>
+                    </div>
+                </div>
+                <div class="tech-category">
+                    <h3 class="tech-category-title">
+                        <i class="fab fa-android"></i> Android Development
+                    </h3>
+                    <div class="tech-items">
+                        <span class="tech-item">Jetpack Compose</span>
+                        <span class="tech-item">MVVM</span>
+                        <span class="tech-item">Room Database</span>
+                        <span class="tech-item">LiveData</span>
+                        <span class="tech-item">ViewModel</span>
+                        <span class="tech-item">Coroutines</span>
+                        <span class="tech-item">Material Design</span>
+                    </div>
+                </div>
+                <div class="tech-category">
+                    <h3 class="tech-category-title">
+                        <i class="fas fa-server"></i> Backend & Services
+                    </h3>
+                    <div class="tech-items">
+                        <span class="tech-item">Firebase</span>
+                        <span class="tech-item">Firestore</span>
+                        <span class="tech-item">Cloud Messaging</span>
+                        <span class="tech-item">REST APIs</span>
+                        <span class="tech-item">Retrofit</span>
+                    </div>
+                </div>
+                <div class="tech-category">
+                    <h3 class="tech-category-title">
+                        <i class="fas fa-toolbox"></i> Tools & Platforms
+                    </h3>
+                    <div class="tech-items">
+                        <span class="tech-item">Android Studio</span>
+                        <span class="tech-item">Git</span>
+                        <span class="tech-item">GitHub</span>
+                        <span class="tech-item">Firebase Console</span>
+                        <span class="tech-item">Gradle</span>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ===== WHAT SETS ME APART SECTION - #apart ===== -->
+        <section class="section" id="apart">
+            <h2 class="section-title">What Sets Me Apart</h2>
+            <div class="highlights">
+                <h3>Initiative & Passion</h3>
+                <ul>
+                    <li>Developed two production-ready Android applications during internship, demonstrating genuine passion for mobile development beyond basic expectations</li>
+                    <li>Self-learned **Jetpack Compose** and integrated it into projects, showing commitment to staying current with modern Android development</li>
+                    <li>Created apps that solve real-world problems in the cybersecurity domain, showcasing problem-solving ability and creative thinking</li>
+                </ul>
+            </div>
+            <div class="highlights">
+                <h3>Technical Versatility</h3>
+                <ul>
+                    <li>Adaptable across multiple programming languages and frameworks, from **Kotlin** and **Java** to Python and JavaScript</li>
+                    <li>Experience with various Android libraries and **Firebase** integration, demonstrating ability to quickly pick up new technologies</li>
+                    <li>Successfully worked with both traditional XML layouts and modern **Jetpack Compose**, showing flexibility in development approaches</li>
+                </ul>
+            </div>
+            <div class="highlights">
+                <h3>Professional Enthusiasm</h3>
+                <ul>
+                    <li>Bring energetic engagement to every project while maintaining professional standards and meeting deadlines</li>
+                    <li>Eager to learn and grow within the Android development field, actively seeking feedback and improvement opportunities</li>
+                    <li>Blend technical reliability with genuine motivation to create outstanding mobile experiences</li>
+                </ul>
+            </div>
+        </section>
+
+        <footer>
+            <p>&copy; 2025 Yash Bhadange • Built with passion for mobile development</p>
+        </footer>
+    </div>
+
+    <script>
+        // ===== CUSTOM CURSOR (IMPROVED SPEED) =====
+        const cursor = document.getElementById('custom-cursor');
+        let mouseX = 0;
+        let mouseY = 0;
+        let cursorX = 0;
+        let cursorY = 0;
+
+        document.addEventListener('mousemove', (e) => {
+            mouseX = e.clientX;
+            mouseY = e.clientY;
+        });
+
+        function updateCursor() {
+            // Speed increased from 0.1 to 0.3 for snappier movement
+            cursorX += (mouseX - cursorX) * 0.3; 
+            cursorY += (mouseY - cursorY) * 0.3;
+            cursor.style.left = cursorX + 'px';
+            cursor.style.top = cursorY + 'px';
+            requestAnimationFrame(updateCursor);
+        }
+        updateCursor();
+
+        // Elements that trigger the cursor hover state
+        const hoverElements = document.querySelectorAll('a, button, .contact-item, .project-card, .tech-item:not(.tech-category-title), .timeline-item, .magnetic-btn');
+        hoverElements.forEach(element => {
+            element.addEventListener('mouseenter', () => cursor.classList.add('hovering'));
+            element.addEventListener('mouseleave', () => cursor.classList.remove('hovering'));
+        });
+
+
+        // ===== CURSOR TRAIL EFFECT =====
+        let trailArray = [];
+        const maxTrails = 10;
+
+        document.addEventListener('mousemove', (e) => {
+            const trail = document.createElement('div');
+            trail.className = 'cursor-trail';
+            trail.style.left = e.clientX + 'px';
+            trail.style.top = e.clientY + 'px';
+            document.body.appendChild(trail);
+            trailArray.push(trail);
+
+            if (trailArray.length > maxTrails) {
+                const oldTrail = trailArray.shift();
+                oldTrail.classList.add('fading');
+                oldTrail.addEventListener('transitionend', () => oldTrail.remove());
+            }
+
+            setTimeout(() => {
+                if (trail.parentElement) {
+                    trail.classList.add('fading');
+                    setTimeout(() => trail.remove(), 500);
+                }
+            }, 100); 
+        });
+
+
+        // ===== SCROLL PROGRESS BAR =====
+        window.addEventListener('scroll', () => {
+            const windowHeight = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+            const scrolled = (window.scrollY / windowHeight) * 100;
+            document.getElementById('scroll-progress').style.width = scrolled + '%';
+        });
+
+
+        // ===== TYPEWRITER EFFECT FOR NAME =====
+        const nameElement = document.getElementById('typed-name');
+        const fullName = 'Yash Bhadange';
+        let nameIndex = 0;
+
+        function typeName() {
+            if (nameIndex < fullName.length) {
+                nameElement.textContent += fullName.charAt(nameIndex);
+                nameIndex++;
+                setTimeout(typeName, 150);
+            }
+        }
+        setTimeout(typeName, 500);
+
+
+        // ===== ROLE TEXT SWITCHER =====
+        const roleElement = document.getElementById('role-text');
+        const roles = [
+            'Android Developer Intern',
+            'Kotlin Enthusiast',
+            'Mobile Developer',
+            'Tech Explorer',
+            'Jetpack Compose Developer'
+        ];
+        let roleIndex = 0;
+
+        function switchRole() {
+            roleElement.style.opacity = '0';
+            
+            setTimeout(() => {
+                roleIndex = (roleIndex + 1) % roles.length;
+                roleElement.textContent = roles[roleIndex];
+                roleElement.style.opacity = '1';
+            }, 500);
+        }
+        setInterval(switchRole, 3000);
+
+
+        // ===== ANIMATED COUNTERS =====
+        const counters = document.querySelectorAll('.stat-number');
+        let countersStarted = false;
+
+        function animateCounters() {
+            counters.forEach(counter => {
+                const target = parseInt(counter.getAttribute('data-target'));
+                let current = 0;
+                const duration = 1500;
+                const step = target / (duration / 30);
+                
+                const updateCounter = () => {
+                    current += step;
+                    if (current < target) {
+                        counter.textContent = Math.ceil(current);
+                        setTimeout(updateCounter, 30);
+                    } else {
+                        counter.textContent = target + '+';
+                    }
+                };
+                updateCounter();
+            });
+        }
+
+        const observerForCounters = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting && !countersStarted) {
+                    countersStarted = true;
+                    animateCounters();
+                    observerForCounters.unobserve(entry.target);
+                }
+            });
+        }, { threshold: 0.5 });
+        observerForCounters.observe(document.querySelector('.stats-container'));
+
+
+        // ===== CLICK TO COPY FUNCTIONALITY =====
+        document.querySelectorAll('[data-copy]').forEach(item => {
+            item.addEventListener('click', () => {
+                const textToCopy = item.getAttribute('data-copy');
+                
+                navigator.clipboard.writeText(textToCopy).then(() => {
+                    const notification = document.getElementById('copy-notification');
+                    notification.classList.add('show');
+                    
+                    setTimeout(() => {
+                        notification.classList.remove('show');
+                    }, 2000);
+                });
+            });
+        });
+
+
+        // ===== MAGNETIC BUTTON EFFECT =====
+        const magneticButtons = document.querySelectorAll('.magnetic-btn');
+
+        magneticButtons.forEach(btn => {
+            btn.addEventListener('mousemove', (e) => {
+                const rect = btn.getBoundingClientRect();
+                const x = e.clientX - rect.left - rect.width / 2;
+                const y = e.clientY - rect.top - rect.height / 2;
+                
+                if (btn.tagName === 'A') {
+                    const baseLift = btn.closest('.contact-info') ? -5 : 0; 
+                    btn.style.transform = `translate(${x * 0.2}px, ${y * 0.2}px) translateY(${baseLift}px)`;
+                } else if (btn.tagName === 'DIV') {
+                    btn.style.transform = `translate(${x * 0.2}px, ${y * 0.2}px) translateY(0)`;
+                }
+            });
+
+            btn.addEventListener('mouseleave', () => {
+                if (btn.tagName === 'A') {
+                    const baseLift = btn.closest('.contact-info') ? -5 : 0;
+                    btn.style.transform = `translateY(${baseLift}px)`;
+                } else {
+                    btn.style.transform = 'translateY(0)';
+                }
+            });
+        });
+
+
+        // ===== PARTICLE SYSTEM WITH CANVAS =====
+        const canvas = document.getElementById('particles-canvas');
+        const ctx = canvas.getContext('2d');
+
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+
+        window.addEventListener('resize', () => {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+        });
+
+        class Particle {
+            constructor() {
+                this.x = Math.random() * canvas.width;
+                this.y = Math.random() * canvas.height;
+                this.size = Math.random() * 2 + 1;
+                this.speedX = (Math.random() - 0.5) * 0.5;
+                this.speedY = (Math.random() - 0.5) * 0.5;
+                this.opacity = Math.random() * 0.5 + 0.2;
+            }
+
+            update() {
+                this.x += this.speedX;
+                this.y += this.speedY;
+
+                if (this.x > canvas.width) this.x = 0;
+                if (this.x < 0) this.x = canvas.width;
+                if (this.y > canvas.height) this.y = 0;
+                if (this.y < 0) this.y = canvas.height;
+            }
+
+            draw() {
+                ctx.fillStyle = `rgba(102, 126, 234, ${this.opacity})`;
+                ctx.beginPath();
+                ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+                ctx.fill();
+            }
+        }
+
+        const particles = [];
+        const particleCount = 80;
+
+        for (let i = 0; i < particleCount; i++) {
+            particles.push(new Particle());
+        }
+
+        function connectParticles() {
+            for (let i = 0; i < particles.length; i++) {
+                for (let j = i + 1; j < particles.length; j++) {
+                    const dx = particles[i].x - particles[j].x;
+                    const dy = particles[i].y - particles[j].y;
+                    const distance = Math.sqrt(dx * dx + dy * dy);
+
+                    if (distance < 150) {
+                        ctx.strokeStyle = `rgba(102, 126, 234, ${0.2 * (1 - distance / 150)})`;
+                        ctx.lineWidth = 1;
+                        ctx.beginPath();
+                        ctx.moveTo(particles[i].x, particles[i].y);
+                        ctx.lineTo(particles[j].x, particles[j].y);
+                        ctx.stroke();
+                    }
+                }
+            }
+        }
+
+        function animateParticles() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            
+            particles.forEach(particle => {
+                particle.update();
+                particle.draw();
+            });
+            
+            connectParticles();
+            
+            requestAnimationFrame(animateParticles);
+        }
+        animateParticles();
+
+
+        // ===== FADE IN SECTIONS ON SCROLL =====
+        const sections = document.querySelectorAll('.section');
+        
+        sections.forEach(section => {
+            section.style.opacity = '0';
+            section.style.transform = 'translateY(50px)';
+        });
+
+        const observerForSections = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.style.opacity = '1';
+                    entry.target.style.transform = 'translateY(0)';
+                    observerForSections.unobserve(entry.target);
+                }
+            });
+        }, {
+            threshold: 0.1
+        });
+
+        sections.forEach(section => observerForSections.observe(section));
+
+
+        // ===== SMOOTH SCROLL =====
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                
+                const navHeight = document.querySelector('nav').offsetHeight;
+
+                if (target) {
+                    window.scrollTo({
+                        top: target.offsetTop - navHeight,
+                        behavior: 'smooth'
+                    });
+                }
+            });
+        });
+
+    </script>
+</body>
+</html>
