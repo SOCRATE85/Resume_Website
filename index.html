@@ -2,264 +2,906 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>SOCRATE CHANCELIER SIEKAPET LIALE</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-    <!-- KEEPING ALL YOUR ORIGINAL DESIGN CSS -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
-
+    <title>SOCRATE CHANCELIER SIEKAPET LIALE - DevOps & Cloud Engineer</title>
     <style>
-/* ========== (YOUR FULL ORIGINAL CSS REMAINS UNCHANGED) ========== */
-/* For brevity in explanation: This includes ALL your dark theme,
-   cursor, particles, animations, hover effects, grid layout, etc. */
+        /* ===== BASIC RESET ===== */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
 
-/* I am keeping your entire CSS exactly the same.
-   (Not removed here to keep this response readable)
-   👉 IMPORTANT: Use the exact CSS you pasted earlier.
-*/
+        /* ===== BODY STYLES ===== */
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: #0a0a0a;
+            color: #e0e0e0;
+            overflow-x: hidden;
+            cursor: none;
+        }
 
+        /* ===== NAV BAR STYLES ===== */
+        nav {
+            position: sticky;
+            top: 0;
+            z-index: 10;
+            background: rgba(10, 10, 10, 0.8);
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid rgba(102, 126, 234, 0.3);
+            padding: 15px 0;
+        }
+
+        .nav-list {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+            display: flex;
+            justify-content: center;
+            list-style: none;
+        }
+
+        .nav-list a {
+            color: #e0e0e0;
+            text-decoration: none;
+            padding: 10px 20px;
+            margin: 0 10px;
+            border-radius: 5px;
+            transition: all 0.3s ease;
+            font-weight: 500;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        /* Underline effect on hover */
+        .nav-list a::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 3px;
+            background: linear-gradient(90deg, #667eea, #764ba2);
+            transform: scaleX(0);
+            transform-origin: bottom right;
+            transition: transform 0.3s ease-out;
+        }
+
+        .nav-list a:hover::after {
+            transform: scaleX(1);
+            transform-origin: bottom left;
+        }
+        
+        .nav-list a:hover {
+            color: #fff;
+        }
+
+
+        /* ===== CUSTOM CURSOR (Speed changed in JS) ===== */
+        #custom-cursor {
+            position: fixed;
+            width: 20px;
+            height: 20px;
+            border: 2px solid #667eea;
+            border-radius: 50%;
+            pointer-events: none;
+            z-index: 10000;
+            transition: transform 0.1s ease;
+            box-shadow: 0 0 20px rgba(102, 126, 234, 0.6);
+        }
+
+        /* Makes cursor bigger when hovering clickable things */
+        #custom-cursor.hovering {
+            transform: scale(1.5);
+            background: rgba(102, 126, 234, 0.2);
+        }
+
+        /* ===== CURSOR TRAIL EFFECT ===== */
+        .cursor-trail {
+            position: fixed;
+            width: 4px;
+            height: 4px;
+            background: #667eea;
+            border-radius: 50%;
+            pointer-events: none;
+            z-index: 9999;
+            opacity: 0.6;
+            box-shadow: 0 0 10px rgba(102, 126, 234, 0.8);
+            transition: opacity 0.5s ease, transform 0.5s ease;
+            transform: scale(1);
+        }
+        
+        .cursor-trail.fading {
+            opacity: 0;
+            transform: scale(0);
+        }
+
+        /* ===== SCROLL PROGRESS BAR ===== */
+        #scroll-progress {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 0%;
+            height: 4px;
+            background: linear-gradient(90deg, #667eea, #764ba2);
+            z-index: 9999;
+            box-shadow: 0 0 20px rgba(102, 126, 234, 0.8);
+        }
+
+        /* ===== FLOATING PARTICLES BACKGROUND ===== */
+        #particles-canvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 0;
+            pointer-events: none;
+        }
+
+        /* ===== COPY NOTIFICATION ===== */
+        #copy-notification {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            padding: 15px 25px;
+            border-radius: 10px;
+            font-weight: bold;
+            opacity: 0;
+            transform: translateY(-20px);
+            transition: all 0.3s ease;
+            z-index: 10000;
+            box-shadow: 0 10px 30px rgba(102, 126, 234, 0.5);
+        }
+
+        #copy-notification.show {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* ===== MAIN CONTAINER ===== */
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            position: relative;
+            z-index: 1;
+        }
+
+        /* ===== HERO SECTION (TOP PART) ===== */
+        header {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            padding: 40px 20px;
+        }
+
+        .hero-content {
+            text-align: center;
+            max-width: 1000px;
+        }
+
+        /* ===== PROFILE PHOTO (MODIFIED) ===== */
+        .profile-photo {
+            width: 180px;
+            height: 180px;
+            border-radius: 50%;
+            margin: 0 auto 30px;
+            position: relative;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            padding: 5px;
+            animation: pulse-glow 3s infinite ease-in-out;
+        }
+
+        /* Pulsing Glow Animation */
+        @keyframes pulse-glow {
+            0% {
+                box-shadow: 0 0 5px rgba(102, 126, 234, 0.3), 0 0 10px rgba(102, 126, 234, 0.1);
+            }
+            50% {
+                box-shadow: 0 0 25px rgba(102, 126, 234, 0.8), 0 0 50px rgba(118, 75, 162, 0.5);
+            }
+            100% {
+                box-shadow: 0 0 5px rgba(102, 126, 234, 0.3), 0 0 10px rgba(102, 126, 234, 0.1);
+            }
+        }
+
+        .profile-photo-inner {
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+            background: #1a1a1a;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 3.5rem;
+            color: #fff;
+            overflow: hidden;
+            font-weight: 500;
+            text-transform: uppercase;
+        }
+
+        /* ===== NAME WITH TYPEWRITER EFFECT ===== */
+        .main-name {
+            font-size: 2.8em;
+            font-weight: bold;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 20px;
+            min-height: 100px;
+            line-height: 1.3;
+            padding: 0 10px;
+        }
+
+        /* Blinking cursor effect for typewriter */
+        .typing-cursor {
+            display: inline-block;
+            width: 3px;
+            height: 1em;
+            background: #667eea;
+            margin-left: 5px;
+            animation: blink 1s infinite;
+        }
+
+        @keyframes blink {
+            0%, 50% { opacity: 1; }
+            51%, 100% { opacity: 0; }
+        }
+
+        /* ===== ANIMATED ROLE TEXT ===== */
+        .role-text {
+            font-size: 1.8em;
+            color: #667eea;
+            margin-bottom: 20px;
+            min-height: 60px;
+            font-weight: 600;
+            transition: opacity 0.5s ease;
+        }
+
+        /* ===== ABOUT ME DESCRIPTION ===== */
+        .about-description {
+            font-size: 1.1em;
+            color: #b0b0b0;
+            line-height: 1.8;
+            margin: 30px auto;
+            max-width: 900px;
+            padding: 25px;
+            background: rgba(255, 255, 255, 0.03);
+            border-radius: 15px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        /* ===== ANIMATED STATS COUNTER ===== */
+        .stats-container {
+            display: flex;
+            justify-content: center;
+            gap: 50px;
+            margin: 40px 0;
+            flex-wrap: wrap;
+        }
+
+        .stat-item {
+            text-align: center;
+        }
+
+        .stat-number {
+            font-size: 3em;
+            font-weight: bold;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .stat-label {
+            color: #808080;
+            margin-top: 5px;
+        }
+
+        /* ===== CONTACT ICONS ===== */
+        .contact-info {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            flex-wrap: wrap;
+            margin-top: 40px;
+        }
+
+        .contact-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 15px 25px;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 25px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            transition: all 0.3s ease;
+            cursor: pointer;
+            position: relative;
+            text-decoration: none;
+            color: inherit;
+        }
+
+        .contact-item:hover {
+            background: rgba(255, 255, 255, 0.1);
+            box-shadow: 0 15px 40px rgba(102, 126, 234, 0.4);
+        }
+
+        .contact-icon {
+            font-size: 1.5em;
+        }
+
+        /* ===== SECTIONS (Experience, Skills, Projects) ===== */
+        .section {
+            margin: 80px 0;
+            padding: 50px;
+            background: rgba(20, 20, 20, 0.6);
+            border-radius: 20px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            position: relative;
+            overflow: hidden;
+            transition: all 0.4s ease, opacity 0.8s ease, transform 0.8s ease;
+            transform-style: flat;
+        }
+
+        /* 2D LIFT EFFECT - SIMPLIFIED HOVER */
+        .section:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 20px 60px rgba(102, 126, 234, 0.3);
+        }
+
+        /* Glowing effect on section hover */
+        .section::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(102, 126, 234, 0.15) 0%, transparent 70%);
+            opacity: 0;
+            transition: opacity 0.5s ease;
+            pointer-events: none;
+        }
+
+        .section:hover::before {
+            opacity: 1;
+        }
+
+        .section-title {
+            font-size: 2.5em;
+            margin-bottom: 40px;
+            color: #fff;
+            position: relative;
+            padding-bottom: 15px;
+        }
+
+        .section-title::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 80px;
+            height: 4px;
+            background: linear-gradient(90deg, #667eea, #764ba2);
+            border-radius: 2px;
+        }
+
+        /* ===== TIMELINE ITEM CARD ENHANCEMENT ===== */
+        .timeline-item {
+            position: relative;
+            margin-bottom: 50px;
+            padding: 25px;
+            background: rgba(255, 255, 255, 0.03);
+            border-radius: 15px;
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            transition: all 0.4s ease;
+            cursor: pointer;
+            box-shadow: inset 0 0 0 transparent;
+        }
+
+        /* ADDED SUBTLE INNER GLOW EFFECT ON HOVER */
+        .timeline-item:hover {
+            transform: translateX(15px);
+            background: rgba(255, 255, 255, 0.08);
+            box-shadow: 0 10px 40px rgba(102, 126, 234, 0.4), 
+                        inset 0 0 20px rgba(102, 126, 234, 0.2);
+        }
+
+        /* Vertical line connecting timeline dots */
+        .timeline::before {
+            content: '';
+            position: absolute;
+            left: 20px;
+            top: 0;
+            bottom: 0;
+            width: 3px;
+            background: linear-gradient(180deg, #667eea, #764ba2);
+        }
+
+        .timeline-dot {
+            position: absolute;
+            left: -34px;
+            top: 30px;
+            width: 14px;
+            height: 14px;
+            background: #667eea;
+            border-radius: 50%;
+            border: 4px solid #0a0a0a;
+            box-shadow: 0 0 20px rgba(102, 126, 234, 0.8);
+            animation: pulse-dot 2s infinite;
+        }
+
+        @keyframes pulse-dot {
+            0%, 100% { transform: scale(1); box-shadow: 0 0 20px rgba(102, 126, 234, 0.8); }
+            50% { transform: scale(1.3); box-shadow: 0 0 30px rgba(102, 126, 234, 1); }
+        }
+
+        .timeline-date {
+            color: #667eea;
+            font-weight: bold;
+            margin-bottom: 10px;
+            font-size: 1em;
+        }
+
+        .timeline-title {
+            font-size: 1.4em;
+            color: #fff;
+            margin-bottom: 15px;
+        }
+
+        .timeline-desc {
+            color: #b0b0b0;
+            line-height: 1.9;
+        }
+
+        /* ===== TECH SKILLS GRID (IMPROVED) ===== */
+        .tech-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 25px;
+            margin-top: 40px;
+        }
+
+        .tech-category {
+            padding: 30px;
+            background: rgba(255, 255, 255, 0.03);
+            border-radius: 15px;
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            transition: all 0.4s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        /* Top colored line that appears on hover */
+        .tech-category::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, #667eea, #764ba2);
+            transform: scaleX(0);
+            transition: transform 0.4s ease;
+        }
+
+        .tech-category:hover::before {
+            transform: scaleX(1);
+        }
+
+        .tech-category:hover {
+            transform: translateY(-10px);
+            background: rgba(255, 255, 255, 0.08);
+            box-shadow: 0 20px 50px rgba(102, 126, 234, 0.4);
+        }
+
+        /* Category Title with Icon Spacing */
+        .tech-category-title {
+            font-size: 1.3em;
+            color: #667eea;
+            margin-bottom: 20px;
+            font-weight: bold;
+            display: flex; /* Aligns icon and text */
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .tech-category-title i {
+            font-size: 1.2em;
+        }
+
+        .tech-items {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px;
+            /* Added padding to prevent cluttering the title */
+            padding-top: 10px; 
+        }
+
+        /* Individual Tech Item Tag */
+        .tech-item {
+            padding: 10px 20px;
+            background: rgba(102, 126, 234, 0.2);
+            border-radius: 20px;
+            font-size: 0.95em;
+            transition: all 0.3s ease;
+            border: 1px solid rgba(102, 126, 234, 0.3);
+            cursor: default;
+            font-weight: 600; /* Made text bolder */
+        }
+
+        /* Tech item hover effect */
+        .tech-item:hover {
+            background: rgba(102, 126, 234, 0.4);
+            transform: scale(1.05);
+            box-shadow: 0 5px 20px rgba(102, 126, 234, 0.5);
+        }
+
+        /* ===== PROJECT CARDS ENHANCEMENT ===== */
+        .projects-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 35px;
+            margin-top: 40px;
+        }
+
+        .project-card {
+            padding: 35px;
+            background: rgba(255, 255, 255, 0.03);
+            border-radius: 15px;
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            transition: all 0.5s ease;
+            position: relative;
+            overflow: hidden;
+            transform-style: flat;
+            box-shadow: inset 0 0 0 transparent;
+        }
+
+        /* Gradient that slides down on hover */
+        .project-card::before {
+            content: '';
+            position: absolute;
+            top: -100%;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(180deg, rgba(102, 126, 234, 0.3), transparent);
+            transition: top 0.5s ease;
+        }
+
+        .project-card:hover::before {
+            top: 0;
+        }
+
+        /* SIMPLIFIED 2D LIFT EFFECT + INNER GLOW ON HOVER */
+        .project-card:hover {
+            transform: translateY(-10px);
+            background: rgba(255, 255, 255, 0.08);
+            box-shadow: 0 25px 60px rgba(102, 126, 234, 0.5),
+                        inset 0 0 25px rgba(102, 126, 234, 0.3);
+            border-color: rgba(102, 126, 234, 0.5);
+        }
+
+        .project-title {
+            font-size: 1.6em;
+            color: #fff;
+            margin-bottom: 15px;
+            position: relative;
+            z-index: 1;
+        }
+
+        .project-desc {
+            color: #b0b0b0;
+            line-height: 1.9;
+            position: relative;
+            z-index: 1;
+        }
+
+        /* ===== HIGHLIGHTS SECTION ===== */
+        .highlights {
+            margin-top: 35px;
+            padding: 30px;
+            background: rgba(102, 126, 234, 0.1);
+            border-left: 5px solid #667eea;
+            border-radius: 10px;
+        }
+
+        .highlights h3 {
+            color: #667eea;
+            margin-bottom: 20px;
+            font-size: 1.3em;
+        }
+
+        .highlights ul {
+            list-style: none;
+            padding-left: 0;
+        }
+
+        .highlights li {
+            padding: 12px 0;
+            color: #c0c0c0;
+            position: relative;
+            padding-left: 30px;
+        }
+
+        .highlights li::before {
+            content: '▹';
+            position: absolute;
+            left: 0;
+            color: #667eea;
+            font-size: 1.3em;
+        }
+
+        /* ===== FOOTER ===== */
+        footer {
+            text-align: center;
+            padding: 50px 20px;
+            color: #808080;
+            margin-top: 80px;
+        }
+
+        /* ===== MOBILE RESPONSIVE ===== */
+        @media (max-width: 768px) {
+            .main-name {
+                font-size: 2.2em;
+            }
+            
+            .role-text {
+                font-size: 1.3em;
+            }
+            
+            .section {
+                padding: 30px;
+            }
+            
+            .timeline {
+                padding-left: 40px;
+            }
+
+            .stats-container {
+                gap: 30px;
+            }
+
+            .stat-number {
+                font-size: 2em;
+            }
+
+            .nav-list {
+                flex-wrap: wrap;
+            }
+
+            .nav-list a {
+                padding: 8px 10px;
+                margin: 5px;
+                font-size: 0.9em;
+            }
+        }
     </style>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
 </head>
-
 <body>
+    <!-- CUSTOM CURSOR: Follows your mouse pointer -->
+    <div id="custom-cursor"></div>
 
-<div id="custom-cursor"></div>
-<div id="scroll-progress"></div>
-<div id="copy-notification">Copied to clipboard! ✓</div>
-<canvas id="particles-canvas"></canvas>
+    <!-- SCROLL PROGRESS BAR: Shows at top of page -->
+    <div id="scroll-progress"></div>
 
-<nav>
-    <ul class="nav-list">
-        <li><a href="#home" class="magnetic-btn">Home</a></li>
-        <li><a href="#timeline" class="magnetic-btn">Experience</a></li>
-        <li><a href="#apps" class="magnetic-btn">Projects</a></li>
-        <li><a href="#skills" class="magnetic-btn">Skills</a></li>
-        <li><a href="#apart" class="magnetic-btn">Highlights</a></li>
-    </ul>
-</nav>
+    <!-- COPY NOTIFICATION: Appears when you copy text -->
+    <div id="copy-notification">Copied to clipboard! ✓</div>
 
-<div class="container">
+    <!-- CANVAS FOR PARTICLES: Animated background -->
+    <canvas id="particles-canvas"></canvas>
 
-<!-- ================= HERO ================= -->
-<header id="home">
-    <div class="hero-content">
-
-        <div class="profile-photo">
-            <div class="profile-photo-inner">
-                SL
-            </div>
-        </div>
-
-        <h1 class="main-name">
-            <span id="typed-name"></span><span class="typing-cursor"></span>
-        </h1>
-
-        <div class="role-text" id="role-text">
-            IT & Cybersecurity Professional
-        </div>
-
-        <div class="about-description">
-            Detail-oriented IT and Cybersecurity professional based in Houston, TX.
-            Experienced in DevSecOps support, Docker containerization, Git version control,
-            Linux systems, and SaaS-based environments. Passionate about security operations,
-            automation, and delivering reliable technical solutions in fast-paced environments.
-        </div>
-
-        <div class="stats-container">
-            <div class="stat-item">
-                <div class="stat-number" data-target="3">0</div>
-                <div class="stat-label">Years Experience</div>
-            </div>
-            <div class="stat-item">
-                <div class="stat-number" data-target="15">0</div>
-                <div class="stat-label">Projects Completed</div>
-            </div>
-            <div class="stat-item">
-                <div class="stat-number" data-target="20">0</div>
-                <div class="stat-label">Technologies Used</div>
-            </div>
-        </div>
-
-        <div class="contact-info">
-            <div class="contact-item magnetic-btn" data-copy="your-email@example.com">
-                <span class="contact-icon">📧</span>
-                <span>your-email@example.com</span>
-            </div>
-            <div class="contact-item magnetic-btn" data-copy="(XXX) XXX-XXXX">
-                <span class="contact-icon">📱</span>
-                <span>(XXX) XXX-XXXX</span>
-            </div>
-            <a href="#" class="contact-item magnetic-btn">
-                <span class="contact-icon"><i class="fab fa-linkedin"></i></span>
-                <span>LinkedIn</span>
-            </a>
-            <a href="#" class="contact-item magnetic-btn">
-                <span class="contact-icon"><i class="fab fa-github"></i></span>
-                <span>GitHub</span>
-            </a>
-        </div>
-
-    </div>
-</header>
-
-<!-- ================= EXPERIENCE ================= -->
-<section class="section" id="timeline">
-    <h2 class="section-title">Professional Experience</h2>
-
-    <div class="timeline">
-
-        <div class="timeline-item">
-            <div class="timeline-dot"></div>
-            <div class="timeline-date">2023 – Present</div>
-            <h3 class="timeline-title">IT / DevOps Support Engineer – ICF</h3>
-            <p class="timeline-desc">
-                Provided technical support for SaaS-based DevOps platforms.
-                Assisted with CI/CD troubleshooting, Docker container deployments,
-                Git branch management, and Linux system configurations.
-                Collaborated with engineering teams to enhance performance,
-                resolve production issues, and improve deployment workflows.
-            </p>
-        </div>
-
-        <div class="timeline-item">
-            <div class="timeline-dot"></div>
-            <div class="timeline-date">2022 – 2023</div>
-            <h3 class="timeline-title">IT & Security Support</h3>
-            <p class="timeline-desc">
-                Performed ticket triage, incident investigation, and access control support.
-                Assisted with vulnerability analysis, endpoint troubleshooting,
-                and security best practices enforcement in enterprise environments.
-            </p>
-        </div>
-
-    </div>
-</section>
-
-<!-- ================= PROJECTS ================= -->
-<section class="section" id="apps">
-    <h2 class="section-title">Technical Projects</h2>
-
-    <div class="projects-grid">
-
-        <div class="project-card">
-            <h3 class="project-title">Docker Multi-Service Deployment</h3>
-            <p class="project-desc">
-                Built and deployed multi-container applications using Docker and Docker Compose.
-                Configured service networking between web applications and databases.
-                Published container images to Docker Hub and managed private/public repositories.
-            </p>
-        </div>
-
-        <div class="project-card">
-            <h3 class="project-title">Git Branch & Version Control Management</h3>
-            <p class="project-desc">
-                Managed remote repositories, resolved merge conflicts,
-                handled tracking branches, and implemented structured Git workflows
-                for collaborative development projects.
-            </p>
-        </div>
-
-    </div>
-</section>
-
-<!-- ================= SKILLS ================= -->
-<section class="section" id="skills">
-    <h2 class="section-title">Technical Skills</h2>
-
-    <div class="tech-grid">
-
-        <div class="tech-category">
-            <h3 class="tech-category-title">
-                <i class="fas fa-server"></i> Systems & OS
-            </h3>
-            <div class="tech-items">
-                <span class="tech-item">Linux</span>
-                <span class="tech-item">Windows</span>
-                <span class="tech-item">Virtual Machines</span>
-            </div>
-        </div>
-
-        <div class="tech-category">
-            <h3 class="tech-category-title">
-                <i class="fab fa-docker"></i> DevOps & Cloud
-            </h3>
-            <div class="tech-items">
-                <span class="tech-item">Docker</span>
-                <span class="tech-item">Docker Compose</span>
-                <span class="tech-item">CI/CD</span>
-                <span class="tech-item">GitHub</span>
-                <span class="tech-item">GitLab</span>
-            </div>
-        </div>
-
-        <div class="tech-category">
-            <h3 class="tech-category-title">
-                <i class="fas fa-shield-alt"></i> Security
-            </h3>
-            <div class="tech-items">
-                <span class="tech-item">Incident Triage</span>
-                <span class="tech-item">Access Control</span>
-                <span class="tech-item">Vulnerability Analysis</span>
-                <span class="tech-item">Security Operations</span>
-            </div>
-        </div>
-
-        <div class="tech-category">
-            <h3 class="tech-category-title">
-                <i class="fas fa-code"></i> Scripting
-            </h3>
-            <div class="tech-items">
-                <span class="tech-item">Bash</span>
-                <span class="tech-item">HTML</span>
-                <span class="tech-item">JavaScript (Basic)</span>
-            </div>
-        </div>
-
-    </div>
-</section>
-
-<!-- ================= HIGHLIGHTS ================= -->
-<section class="section" id="apart">
-    <h2 class="section-title">What Sets Me Apart</h2>
-
-    <div class="highlights">
-        <h3>Technical Reliability</h3>
-        <ul>
-            <li>Strong troubleshooting and root-cause analysis skills</li>
-            <li>Experience in production-level SaaS environments</li>
-            <li>Ability to manage deployments and containerized systems</li>
+    <!-- ===== NAVIGATION BAR ===== -->
+    <nav>
+        <ul class="nav-list">
+            <li><a href="#home" class="magnetic-btn">Home</a></li>
+            <li><a href="#timeline" class="magnetic-btn">Experience</a></li>
+            <li><a href="#apps" class="magnetic-btn">Projects</a></li>
+            <li><a href="#skills" class="magnetic-btn">Skills</a></li>
+            <li><a href="#apart" class="magnetic-btn">Highlights</a></li>
         </ul>
-    </div>
+    </nav>
 
-    <div class="highlights">
-        <h3>Security Mindset</h3>
-        <ul>
-            <li>Understands secure configuration and access control principles</li>
-            <li>Familiar with vulnerability remediation processes</li>
-            <li>Applies security-first thinking to infrastructure and development</li>
-        </ul>
-    </div>
+    <div class="container">
+        <!-- ===== HERO SECTION (TOP OF PAGE) - #home ===== -->
+        <header id="home">
+            <div class="hero-content">
+                <!-- Profile Photo with Pulsing Glow - using initials as placeholder -->
+                <div class="profile-photo">
+                    <div class="profile-photo-inner">
+                        <!-- Replace with your actual image if available, otherwise initials show -->
+                        <span>SC</span>
+                    </div>
+                </div>
 
-</section>
+                <h1 class="main-name">
+                    <span id="typed-name"></span><span class="typing-cursor"></span>
+                </h1>
 
-<footer>
-    <p>&copy; 2026 SOCRATE CHANCELIER SIEKAPET LIALE • IT & Cybersecurity Professional</p>
-</footer>
+                <div class="role-text" id="role-text">DevOps & Cloud Engineer</div>
 
-</div>
+                <div class="about-description">
+                    Results-driven DevOps/Cloud Engineer with experience designing, deploying, and optimizing cloud-native infrastructure and CI/CD workflows. Proven expertise in Kubernetes (EKS), GKE, Terraform, Jenkins, Docker, Ansible, Helm, and AWS, with a strong emphasis on automation, scalability, and security. Successfully reduced deployment times by 25% and improved system uptime by 15% through proactive monitoring, infrastructure automation, and performance tuning. Skilled in managing containerized applications using service mesh solutions and implementing robust CI/CD pipelines to accelerate software delivery. Adept at enforcing IAM policies, maintaining compliance with industry standards such as SOC 2 and HIPAA.
+                </div>
 
-<!-- KEEP YOUR ORIGINAL JAVASCRIPT BELOW -->
-<script>
-/* IMPORTANT:
-   Paste your entire original JavaScript here (cursor, particles,
-   animations, typewriter, counters, etc.)
-*/
+                <div class="stats-container">
+                    <div class="stat-item">
+                        <div class="stat-number" data-target="7">0</div>
+                        <div class="stat-label">+ Years Experience</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-number" data-target="25">0</div>
+                        <div class="stat-label">% Faster Deployments</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-number" data-target="15">0</div>
+                        <div class="stat-label">% Uptime Increase</div>
+                    </div>
+                </div>
 
-/* Only change this line: */
+                <div class="contact-info">
+                    <div class="contact-item magnetic-btn" data-copy="s.c.liale@example.com">
+                        <span class="contact-icon">📧</span>
+                        <span>s.c.liale@example.com</span>
+                    </div>
+                    <div class="contact-item magnetic-btn" data-copy="+1 (555) 123-4567">
+                        <span class="contact-icon">📱</span>
+                        <span>+1 (555) 123-4567</span>
+                    </div>
+                    <a href="https://linkedin.com/in/socrate-chancelier" target="_blank" class="contact-item magnetic-btn">
+                        <span class="contact-icon"><i class="fab fa-linkedin"></i></span>
+                        <span>LinkedIn</span>
+                    </a>
+                    <a href="https://github.com/socrate-chancelier" target="_blank" class="contact-item magnetic-btn">
+                        <span class="contact-icon"><i class="fab fa-github"></i></span>
+                        <span>GitHub</span>
+                    </a>
+                </div>
+            </div>
+        </header>
 
-const fullName = 'SOCRATE CHANCELIER SIEKAPET LIALE';
+        <!-- ===== PROFESSIONAL EXPERIENCE TIMELINE - #timeline ===== -->
+        <section class="section" id="timeline">
+            <h2 class="section-title">Professional Experience</h2>
+            <div class="timeline">
+                <div class="timeline-item">
+                    <div class="timeline-dot"></div>
+                    <div class="timeline-date">September 2024 – Present</div>
+                    <h3 class="timeline-title">DevOps Engineer @ Highmark Health</h3>
+                    <p class="timeline-desc">Secure containerized CI/CD pipelines with GitLab, Jenkins, SonarQube, Nexus, Kubernetes. Implement automation with PowerShell, Python. Design container workloads using Docker/Kubernetes. GitOps with Ansible, enforce IAM, VPC security, encryption. Enable audit logging and compliance.</p>
+                </div>
+                <div class="timeline-item">
+                    <div class="timeline-dot"></div>
+                    <div class="timeline-date">May 2020 – May 2024</div>
+                    <h3 class="timeline-title">DevOps Engineer @ ICF-SemanticBits Corporation (Remote)</h3>
+                    <p class="timeline-desc">Developed CI/CD pipelines with GitLab CI/CD and Jenkins; integrated security controls. Tracked release metrics, SLAs. Connected pipelines to CloudWatch, Splunk. Built end-to-end automation with Terraform, CloudFormation. Maintained toolchains at scale.</p>
+                </div>
+                <div class="timeline-item">
+                    <div class="timeline-dot"></div>
+                    <div class="timeline-date">May 2019 – July 2020</div>
+                    <h3 class="timeline-title">Software Engineer @ SemanticBits-ICF (Remote)</h3>
+                    <p class="timeline-desc">Developed CI/CD pipelines with GitLab CI/CD, Jenkins. Implemented UI/UX with ReactJS, WebRTC, AWS Chime SDK for video/audio calling and chat features.</p>
+                </div>
+                <div class="timeline-item">
+                    <div class="timeline-dot"></div>
+                    <div class="timeline-date">February 2018 – March 2019</div>
+                    <h3 class="timeline-title">Linux/Java System Engineer @ Surge Technology (Katy, TX)</h3>
+                    <p class="timeline-desc">Performed system updates/patches; managed firewall, network/server monitoring on/off-site; configured and secured SSH for remote access.</p>
+                </div>
+            </div>
+            <!-- Adjunct Professor role added separately as it's concurrent -->
+            <div style="margin-top: 30px; padding: 25px; background: rgba(102, 126, 234, 0.1); border-radius: 15px;">
+                <h3 style="color: #667eea;">Adjunct Professor (BCIS: Cloud, Linux, Python) @ Lone Star College</h3>
+                <p style="color: #b0b0b0;">September 2023 – Present • Delivered lectures on AWS, Linux, OpenShift, Terraform.</p>
+            </div>
+        </section>
 
-</script>
+        <!-- ===== PROJECTS / KEY ACHIEVEMENTS SECTION - #apps ===== -->
+        <section class="section" id="apps">
+            <h2 class="section-title">Key Projects & Achievements</h2>
+            <div class="projects-grid">
+                <div class="project-card">
+                    <h3 class="project-title">CI/CD Pipeline Optimization</h3>
+                    <p class="project-desc">Engineered end-to-end CI/CD workflows with integrated security scanning (SonarQube, OWASP) reducing deployment errors by 25%. Used Jenkins, GitLab CI, Terraform for multi-environment provisioning.</p>
+                </div>
+                <div class="project-card">
+                    <h3 class="project-title">Kubernetes Platform Migration</h3>
+                    <p class="project-desc">Led migration of legacy apps to EKS/GKE; implemented Helm charts, FluxCD for GitOps. Improved system uptime by 15% via Prometheus/Grafana monitoring and HPA tuning.</p>
+                </div>
+                <div class="project-card">
+                    <h3 class="project-title">Infrastructure as Code Overhaul</h3>
+                    <p class="project-desc">Standardized Terraform/Terragrunt modules across AWS, GCP; enforced IAM and network policies (VPC, security groups). Reduced provisioning time from days to hours.</p>
+                </div>
+                <div class="project-card">
+                    <h3 class="project-title">Security & Compliance Hardening</h3>
+                    <p class="project-desc">Implemented STIG, NIST, HIPAA controls; enabled audit logging, data encryption (at-rest/in-transit). Integrated AWS IAM, Secrets Manager, and OPA policies in CI/CD.</p>
+                </div>
+            </div>
+        </section>
 
-</body>
-</html>
+        <!-- ===== TECHNICAL SKILLS SECTION - #skills ===== -->
+        <section class="section" id="skills">
+            <h2 class="section-title">Technical Skills</h2>
+            <div class="tech-grid">
+                <div class="tech-category">
+                    <h3 class="tech-category-title"><i class="fas fa-cloud"></i> Cloud & Infrastructure</h3>
+                    <div class="tech-items">
+                        <span class="tech-item">AWS (VPC, IAM, EKS)</span>
+                        <span class="tech-item">GCP / GKE</span>
+                        <span class="tech-item">OpenStack</span>
+                        <span class="tech-item">VMware</span>
+                        <span class="tech-item">Load Balancers</span>
+                        <span class="tech-item">Firewalls</span>
+                        <span class="tech-item">Kali Linux</span>
+                    </div>
+                </div>
+                <div class="tech-category">
+                    <h3 class="tech-category-title"><i class="fas fa-code-branch"></i> CI/CD & Automation</h3>
+                    <div class="tech-items">
+                        <span class="tech-item">Jenkins</span>
+                        <span class="tech-item">GitLab CI</span>
+                        <span class="tech-item">ArgoCD</span>
+                        <span class="tech-item">FluxCD</span>
+                        <span class="tech-item">AWS CodePipeline</span>
+                        <span class="tech-item">Ansible</span>
+                        <span class="tech-item">GitHub Actions</span>
+                    </div>
+                </div>
+                <div class="tech-category">
+                    <h3 class="tech-category-title"><i class="fas fa-cubes"></i> Container & Orchestration</h3>
+                    <div class="tech-items">
+                        <span class="tech-item">Docker</span>
+                        <span class="tech-item">Kubernetes (EKS)</span>
+                        <span class="tech-item">OpenShift</span>
+                        <span class="tech-item">Helm</span>
+                        <span class="tech-item">DockerHub/ECR/Nexus</span>
+                    </div>
+                </div>
+                <div class="tech-category">
+                    <h3 class="tech-category-title"><i class="fas fa-code"></i> IaC & Config Mgmt</h3>
+                    <div class="tech-items">
+                        <span class="tech-item">Terraform/Terragrunt</span>
+                        <span class="tech-item">AWS CloudFormation</span>
+                        <span class="tech-item">Ansible</span>
+                    </div>
+                </div>
+                <div class="tech-category">
+                    <h3 class="tech-category-title"><i class="fas fa-shield-alt"></i> Security & Compliance</h3>
+                    <div class="tech-items">
+                        <span class="tech-item">IAM / Policies</span>
+                        <span class="tech-item">STIG / NIST / HIPAA</span>
+                        <span class="tech-item">OWASP / FISMA</span>
+                        <span class="tech-item">Secrets Management</span>
+                        <span class="tech-item">SOC 2</span>
+                    </div>
+                </div>
+                <div class="tech-category">
+                    <h3 class="tech-category-title"><i class="fas fa-chart-line"></i> Monitoring & Logging</h3>
+                    <div class="tech-items">
+                        <span class="tech-item">Prometheus / Grafana</span>
+                        <span class="tech-item">Datadog</span>
+                        <span class="tech-item">CloudWatch</span>
+                        <span class="tech-item">Splunk</span>
+                        <span class="tech-item">Elastic Stack</span>
+                    </div>
+                </div>
+                <div class="tech-category">
+                    <h3 class="tech-category-title"><i class="fas fa-terminal"></i> Scripting & Languages</h3>
+                    <div class="tech-items">
+                        <span class="tech-item">Python</span>
+                        <span class="tech-item">Bash</span>
+                        <span class="tech-item">PowerShell</span>
+                        <span class="tech-item">SQL</span>
+                    </div>
+                </div>
+                <div class="tech-category">
+                    <h3 class="tech-category-title"><i class="fas fa-database"></i> Data
