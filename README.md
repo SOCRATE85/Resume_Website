@@ -1,4 +1,4 @@
-https://github.com/khalidameen872/My-Futuristic-Resume/tree/main
+
 
 Socrate Quantum Grid Resume Website
 
